@@ -33,8 +33,12 @@ public class ProgressService extends Service implements TaskCountListener {
 
     /** Simple wrapper to start the service */
     public static void startService(Context context){
-        Intent intent = new Intent(context, ProgressService.class);
-        ContextCompat.startForegroundService(context, intent);
+        try {
+            Intent intent = new Intent(context, ProgressService.class);
+            ContextCompat.startForegroundService(context, intent);
+        } catch (Exception e) {
+            Log.w("ProgressService", "Cannot start foreground service from background", e);
+        }
     }
 
     private NotificationCompat.Builder mNotificationBuilder;
