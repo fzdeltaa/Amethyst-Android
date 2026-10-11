@@ -78,3 +78,16 @@ jobs:
         with:
           name: app-release
           path: out/app-release.*
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-$(date -u +%Y%m%d-%H%M%S)"
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          gh release create "$TAG" \
+            --repo "${{ github.repository }}" \
+            --title "Build $TAG" \
+            --notes "Automated build from commit $SHORT_SHA on $(date -u +%Y-%m-%d)" \
+            --latest \
+            out/app-release.apk out/app-release.md5 out/app-debug.apk out/app-debug.md5
