@@ -221,7 +221,7 @@ public final class Tools {
         CTRLMAP_PATH = DIR_GAME_HOME + "/controlmap";
         CTRLDEF_FILE = DIR_GAME_HOME + "/controlmap/default.json";
         GAME_PROFILES_FILE = Tools.DIR_GAME_NEW + "/launcher_profiles.json";
-        switchDemo(isDemoProfile(ctx));
+        switchDemo(false);
     }
 
     @SuppressLint("PrivateApi")
@@ -847,8 +847,6 @@ public final class Tools {
         String mcArguments = versionInfo.minecraftArguments == null ?
                 fromStringArray(minecraftArgs.toArray(new String[0])):
                 versionInfo.minecraftArguments;
-
-        if(profile.isDemo()) mcArguments += " --demo";
 
         return JSONUtils.insertJSONValueList(splitAndFilterEmpty(mcArguments), varArgMap);
     }
@@ -1851,15 +1849,7 @@ public final class Tools {
     }
 
     public static void hasNoOnlineProfileDialog(Activity activity, @Nullable Runnable run, @Nullable String customTitle, @Nullable String customMessage){
-        if (hasOnlineProfile() && !Tools.isDemoProfile(activity)){
-            if (run != null) { // Demo profile handling should be using customTitle and customMessage
-                run.run();
-            }
-        } else { // If there is no online profile, show a dialog
-            customTitle = customTitle == null ? activity.getString(R.string.no_minecraft_account_found) : customTitle;
-            customMessage = customMessage == null ? activity.getString(R.string.feature_requires_java_account) : customMessage;
-            dialogOnUiThread(activity, customTitle, customMessage);
-        }
+        if (run != null) run.run();
     }
 
     // Some boilerplate to reduce boilerplate elsewhere
